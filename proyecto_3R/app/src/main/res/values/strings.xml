@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">proyecto_3R</string>
+
+
+    <string name="btn_iniciar_pantalla">Iniciar Sesion</string>
+    <string name="btn_registrar_pantalla">Registrarse</string>
+
+
+    <string name="btn_iniciarSesion">Iniciar Sesion</string>
+    <string name="btn_registrarse">Registrarse</string>
+
+    <string name="btnR_femenino">Femenino</string>
+    <string name="btnR_masculino">Masculino</string>
+
+    <string name="bienvenida">Hola Bienvenido a 3R</string>
+
+</resources>
