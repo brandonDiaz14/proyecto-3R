@@ -11,7 +11,9 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -96,6 +100,7 @@ public class MapaVista extends AppCompatActivity implements OnMapReadyCallback, 
                                     int lat = (int) listaDirecciones.get(0).getLatitude();
                                     int longi = (int) listaDirecciones.get(0).getLongitude();
                                     puntoActual(lat,longi);
+
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -122,25 +127,16 @@ public class MapaVista extends AppCompatActivity implements OnMapReadyCallback, 
     }
     public void puntos() {
         LatLng colombia = new LatLng(4.5147764,-74.1165862);
-        mMap.addMarker(new MarkerOptions().position(colombia).title("hola"));
+        BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+        mMap.addMarker(new MarkerOptions().position(colombia)
+                .title("Deposito de chatarra").icon(icon));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(colombia));
 
     }
     public void puntoActual(int latitud,int longitud) {
-        LatLng colombia = new LatLng(4.6147764, -74.1265862);
-        mMap.addMarker(new MarkerOptions().position(colombia).title("hola"));
+        LatLng colombia = new LatLng(latitud, longitud);
+        mMap.addMarker(new MarkerOptions().position(colombia).title("Aqui estas tu"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(colombia));
-        // Puntos de la ruta (ejemplo: origen y destino)
-        LatLng origin = new LatLng(4.5147764,-74.1165862);
-        LatLng destination = new LatLng(4.5147764, -74.1165862);
-
-        // Agregar los puntos a la lista de puntos de la ruta
-        routePoints = new ArrayList<>();
-        routePoints.add(origin);
-        routePoints.add(destination);
-
-        // Trazar la ruta en el mapa
-        drawRouteOnMap(routePoints);
     }
 
     @Override
@@ -166,5 +162,26 @@ public class MapaVista extends AppCompatActivity implements OnMapReadyCallback, 
 
             Polyline polyline = googleMap.addPolyline(polylineOptions);
         }
+    }
+
+    public void verDistancia (View view){
+        Intent i = new Intent(this, OdometerActivity.class);
+        startActivity(i);
+    }
+
+    public void onSendMaps(View view) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("www.google.com")
+                .appendPath("maps")
+                .appendPath("dir")
+                .appendPath("")
+                .appendQueryParameter("api", "1")
+                .appendQueryParameter("destination", 4.5147764 + "," + -74.1165862);
+        String url = builder.build().toString();
+        Log.d("Directions", url);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 }
